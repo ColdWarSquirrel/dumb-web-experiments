@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Wave</title>
+    <meta property="og:title" content="Image Waver :B" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="you can make images wiggly and stuff" />
+    <meta property="og:url" content="https://thesomething.uk/image_wave/" />
+    <style>
+        *{
+            color:white;
+            margin-left:15px;
+            image-rendering: pixelated;
+        }
+        @font-face {
+            font-family: 'jgs7';
+            src: url('fonts/jgs7.woff2') format('woff2'),
+                url('fonts/jgs7.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        body,html{
+            margin:0;
+            padding:0;
+            background-color: black;
+        }
+        br{
+            user-select:none;
+            -moz-user-select:none;
+            -webkit-user-select:none;
+        }
+        body{
+            padding-top:15px;
+            padding-left:15px;
+            font-family:'Courier New', Courier, monospace;
+        }
+        label{
+            user-select:none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+        }
+        #output{
+            margin:0px;
+            background-color: black;
+            border:1px solid white;
+            border-radius:10px;
+            border-top-left-radius: 0px;
+            padding:5px;
+            color:white;
+            text-align:center;
+            width:fit-content;
+            height:fit-content;
+        }
+        #imgPreview{
+            margin:0px;
+            background-color: black;
+            border:1px solid white;
+            border-radius:10px;
+            border-bottom-left-radius: 0px;
+            color:white;
+            text-align:center;
+            width:fit-content;
+            height:fit-content;
+        }
+        #recreate{
+            width:min(100vw, 400px);
+            height:200px;
+        }
+        input,select,option,textarea{
+            background-color: black;
+            color:white;
+        }
+        input[type=button]{
+            border:1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="loadfile"><br>
+    <input type="button" value="pause" id="pause"><br>
+    <label for="speed">Speed: </label>
+    <input type="number" value="25" min="1" max="100" id="speed"><br>
+    <label for="amplitude">amplitude: </label>
+    <input type="number" value="20" min="0" max="100" id="amplitude"><br>
+    <label for="frequency">frequency: </label>
+    <input type="number" value="0.05" min="0" max="1" step="0.001" id="frequency"><br>
+    <label for="slicewidth">slice width: </label>
+    <input type="number" value="1" min="1" max="50" step="1" id="slicewidth"><br>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
