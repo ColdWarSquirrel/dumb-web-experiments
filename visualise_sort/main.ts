@@ -6,7 +6,8 @@ document.body.append(canvas);
 const ctx = canvas.getContext('2d')!;
 
 
-/*  DOM stuff  */
+/*  defaults / mins and maxes  */
+
 
 class Input<T extends HTMLElement> {
     public element: T;
@@ -14,44 +15,10 @@ class Input<T extends HTMLElement> {
     constructor(element: T, event: string, listener: (element: T, e: Event) => void) {
         this.element = element;
         this.listener = listener;
-        addEventListener(event, (e) => { listener(this.element, e) });
+        this.element.addEventListener(event, (e) => { listener(this.element, e) });
     }
 }
-const algorithmInput = new Input<HTMLSelectElement>(
-    document.querySelector('#algorithm')!,
-    'change',
-    (element) => {
-        switchAlgorithm(element.options[element.selectedIndex].value);
-    }
-);
-const amountInput = new Input<HTMLInputElement>(
-    document.querySelector('#amount_of_bars')!,
-    'change',
-    (element) => {
-        createBars(isNaN(parseInt(element.value)) ?
-            DEFAULT_BAR_COUNT :
-            clamp(MIN_BAR_COUNT, MAX_BAR_COUNT, parseInt(element.value)));
-    }
-);
-const fpsInput = new Input<HTMLInputElement>(
-    document.querySelector('#fps')!,
-    'change',
-    (element) => {
-        fps = (isNaN(parseInt(element.value)) ?
-            DEFAULT_FPS :
-            clamp(MIN_FPS, MAX_FPS, parseFloat(element.value)));
-    }
-);
-const useStepsInput = new Input<HTMLInputElement>(
-    document.querySelector('#useSteps')!,
-    'change',
-    (element) => {
-        useSteps = element.checked;
-    }
-);
 
-
-/*  defaults / mins and maxes  */
 const CANVAS_WIDTH = Math.min(window.innerWidth, 600);
 const CANVAS_HEIGHT = 300;
 
@@ -276,6 +243,40 @@ const loop = function (now: number) {
 
 
 /*  DOM interaction / DOM setup  */
+
+const algorithmInput = new Input<HTMLSelectElement>(
+    document.querySelector('#algorithm')!,
+    'change',
+    (element) => {
+        switchAlgorithm(element.options[element.selectedIndex].value);
+    }
+);
+const amountInput = new Input<HTMLInputElement>(
+    document.querySelector('#amount_of_bars')!,
+    'change',
+    (element) => {
+        createBars(isNaN(parseInt(element.value)) ?
+            DEFAULT_BAR_COUNT :
+            clamp(MIN_BAR_COUNT, MAX_BAR_COUNT, parseInt(element.value)));
+    }
+);
+const fpsInput = new Input<HTMLInputElement>(
+    document.querySelector('#fps')!,
+    'change',
+    (element) => {
+        fps = (isNaN(parseInt(element.value)) ?
+            DEFAULT_FPS :
+            clamp(MIN_FPS, MAX_FPS, parseFloat(element.value)));
+    }
+);
+const useStepsInput = new Input<HTMLInputElement>(
+    document.querySelector('#useSteps')!,
+    'change',
+    (element) => {
+        useSteps = element.checked;
+    }
+);
+
 window.onload = () => {
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
