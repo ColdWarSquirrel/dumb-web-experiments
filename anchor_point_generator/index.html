@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Anchor Point Generator</title>
+    <style>
+        *{
+            font-size:1rem;
+            margin:0px;
+        }
+        body{
+            background-color: #171a21;
+            color:#c7d5e0;
+            padding:calc( ( 1vw + 1vh) / 2 );
+        }
+        .noselect{
+            user-select:none;
+        }
+        br{
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="fileinput" class="noselect"><br>
+    <span id="errorMsg" style="display:none;">this file is not supported! try again!!! again!!!!!</span><br>
+    <canvas class="noselect"></canvas><br>
+    <span id="output">0,0<br>0,0</span><br>
+    <input type="button" value="reset" id="resetbutton"><br>
+    <script>
+        "use strict";
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+        const errorMsg = document.querySelector("#errorMsg");
+        const fileInput = document.querySelector('#fileinput');
+        const resetButton = document.querySelector('#resetbutton');
+        const coords = document.querySelector('#output');
+        let sampleImage = new Image();
+        sampleImage.onload = ()=>{
+            anchorpoint.image = sampleImage;
+            setDimensions();
+            update(anchorpoint.centreX, anchorpoint.centreY);
+        }
+        sampleImage.src = "./curiositycore.png";
+        let anchorpoint = {
+            image:new Image(),
+            x:0,
+            y:0,
+            vecx:0,
+            vecy:0,
+            size:5,
+            centreX:0,
+            centreY:0
+        };
+        let isMouseDown = false;
+        const setDimensions = ()=>{
+            canvas.width = anchorpoint.image.width;
+            canvas.height = anchorpoint.image.height;
+            anchorpoint.centreX = anchorpoint.image.width/2;
+            anchorpoint.centreY = anchorpoint.image.height/2;
+        }
+        const drawImageToCanvas = ()=>{
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(anchorpoint.image, 0, 0);
+            drawAnchorPoint(0, 0, anchorpoint.size*0.75);
+        }
+        const drawAnchorPoint = (x = anchorpoint.x, y = anchorpoint.y, size = anchorpoint.size)=>{
+            x += anchorpoint.centreX;
+            y += anchorpoint.centreY;
+            ctx.save();
+            ctx.strokeStyle = "white";
+            ctx.beginPath();
+            ctx.moveTo(x-size, y-size);
+            ctx.lineTo(x+size, y+size);
+            ctx.moveTo(x+size, y-size);
+            ctx.lineTo(x-size, y+size);
+            ctx.stroke();
+
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(x-size, y-size, size*2, size*2);
+            ctx.restore();
+        }
+        const handlePaste = (event) => {
+            var items = event.clipboardData.items;
+            if (!items) return;
+            var item = items[0];
+            if (item.kind === "file" && item.type.match("^image/")) {
+                var blob = item.getAsFile();
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    anchorpoint.image = new Image();
+                    anchorpoint.image.onload = () => {
+                        errorMsg.style.display = 'none';
+                        setDimensions();
+                        update(anchorpoint.centreX, anchorpoint.centreY);
+                        return true;
+                    }
+                    anchorpoint.image.src = reader.result;
+                }
+                reader.readAsDataURL(blob);
+            } else {
+                errorMsg.style.display = 'block';
+                let size = 0;
+                console.log(item);
+                if(item){
+                    if(item.getAsFile){
+                        size = item.getAsFile().size;
+                    }
+                }
+                console.error(`isnt a supported image file!\nsize: ${size} bytes`);
+                return false;
+            }
+        }
+        const handleFile = () => {
+            if (fileInput.files && fileInput.files[0]) {
+                const item = fileInput.files[0];
+                if (item.type.match("^image/")) {
+                    var reader = new FileReader();
+                    reader.onload = (e) => {
+                        anchorpoint.image = new Image();
+                        anchorpoint.image.onload = () => {
+                            errorMsg.style.display = 'none';
+                            setDimensions();
+                            update(anchorpoint.centreX, anchorpoint.centreY);
+                            return true;
+                        }
+                        anchorpoint.image.src = reader.result;
+                    }
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else {
+                    errorMsg.style.display = 'block';
+                    console.error(`isnt a supported image file!\nsize: ${fileInput.files[0].size} bytes`);
+                    return false;
+                }
+            }
+        }
+        const setAnchorPoint = (x,y)=>{
+            anchorpoint.x = x - anchorpoint.centreX;
+            anchorpoint.y = y - anchorpoint.centreY;
+            anchorpoint.vecx = (x / anchorpoint.image.width) - 0.5;
+            anchorpoint.vecy = (y / anchorpoint.image.height) - 0.5;
+            coords.innerText = `${anchorpoint.x}, ${anchorpoint.y},\n${anchorpoint.vecx}, ${anchorpoint.vecy}`;
+        }
+        const update = (x,y) => {
+            setAnchorPoint(x,y);
+            drawImageToCanvas();
+            drawAnchorPoint();
+        }
+        const handleMouseDown = (e) => {
+            isMouseDown = true;
+            update(e.clientX-canvas.offsetLeft, e.clientY-canvas.offsetTop);
+        }
+        const handleMouseUp = ()=>{ isMouseDown = false; }
+        const handleMouseMove = (e) => {
+            if(isMouseDown){
+                handleMouseDown(e);
+            }
+        }
+        const reset = ()=>{
+            update(anchorpoint.centreX,anchorpoint.centreY);
+        }
+        document.querySelector('input[type=file]').addEventListener("change", handleFile);
+        document.querySelector('input[type=button]').addEventListener("click", reset);
+        canvas.addEventListener("mousedown", handleMouseDown);
+        canvas.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+        document.addEventListener("paste", handlePaste);
+    </script>
+</body>
+</html>
