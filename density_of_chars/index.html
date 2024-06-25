@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>measure density of characters</title>
+    <meta property="og:title" content="Character Density" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="measures, compares and sorts the density of a set of custom utf-8 characters" />
+    <meta property="og:url" content="https://thesomething.uk/density_of_chars/" />
+    <style>
+        *{
+            margin:0px;
+        }
+        canvas{
+            border:1px solid black;
+        }
+        body{
+            padding:20px;
+        }
+    </style>
+</head>
+<body>
+    <label for="characters">characters (seperated with comma): </label><input type="text" name="characters"><br>
+    <pre id="output"></pre>
+    <canvas></canvas>
+    <script src="main.js"></script>
+</body>
+</html>
