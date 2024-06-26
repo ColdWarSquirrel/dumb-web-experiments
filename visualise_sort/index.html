@@ -2,79 +2,79 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualise Sorting</title>
-    <style>
-        * {
-            color: white;
-            image-rendering: pixelated;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualise Sorting</title>
+  <style>
+    * {
+      color: white;
+      image-rendering: pixelated;
+    }
 
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            background-color: black;
-        }
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+    }
 
-        body {
-            padding-top: 15px;
-            padding-left: 15px;
-        }
+    body {
+      padding-top: 15px;
+      padding-left: 15px;
+    }
 
-        label {
-            user-select: none;
-            -moz-user-select: none;
-            -webkit-user-select: none;
-        }
+    label {
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+    }
 
-        canvas {
-            margin: 0px;
-            background-color: black;
-            border: 1px solid white;
-        }
+    canvas {
+      margin: 0px;
+      background-color: black;
+      border: 1px solid white;
+    }
 
-        input,
-        select,
-        option,
-        textarea {
-            background-color: black;
-            color: white;
-        }
+    input,
+    select,
+    option,
+    textarea {
+      background-color: black;
+      color: white;
+    }
 
-        input[type=button] {
-            border: 1px solid white;
-        }
-    </style>
+    input[type=button] {
+      border: 1px solid white;
+    }
+  </style>
 </head>
 
 <body>
 
-    <label for="algorithm">algorithm: </label>
-    <select id="algorithm">
-        <option value="bubble">Bubble Sort</option>
-        <option value="insert">Insertion Sort</option>
-    </select>
-    <br><br>
+  <label for="algorithm">algorithm: </label>
+  <select id="algorithm">
+    <option value="bubble">Bubble Sort</option>
+    <option value="insert">Insertion Sort</option>
+  </select>
+  <br><br>
 
-    <label for="amount_of_bars">Amount: </label>
-    <input id="amount_of_bars" type="number"><br>
-    <span>Warning: higher values can slow down your browser</span>
-    <br><br>
+  <label for="amount_of_bars">Amount: </label>
+  <input id="amount_of_bars" type="number"><br>
+  <span>Warning: higher values can slow down your browser</span>
+  <br><br>
 
-    <label for="fps">Updates per second: </label>
-    <input id="fps" placeholder="fps" type="number">
-    <br><br>
+  <label for="fps">Updates per second: </label>
+  <input id="fps" placeholder="fps" type="number">
+  <br><br>
 
-    <label for="useSteps">Animate each step instead of animating every full pass: </label>
-    <input id="useSteps" type="checkbox">
-    <br><br>
+  <label for="useSteps">Animate each step instead of animating every full pass: </label>
+  <input id="useSteps" type="checkbox">
+  <br><br>
 
-    <span>also click the display to reset the visualisation</span>
-    <br>
+  <span>also click the display to reset the visualisation</span>
+  <br>
 
-    <script src="./main.js"></script>
+  <script src="./main.js"></script>
 </body>
 
 </html>

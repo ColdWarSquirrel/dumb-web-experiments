@@ -20,11 +20,11 @@ class RestrictColourDepth {
     public height: number;
     public name: string;
     public src: string;
-    public range:number;
+    public range: number;
     public depth: {
-        r:number,
-        g:number,
-        b:number
+        r: number,
+        g: number,
+        b: number
     };
     public pixelImage: { value: HTMLImageElement; width: number; height: number; };
 
@@ -39,9 +39,9 @@ class RestrictColourDepth {
         let eightBitDiv = Math.cbrt(eightBitRange);
         this.range = eightBitRange;
         this.depth = {
-            r:eightBitDiv,
-            g:eightBitDiv,
-            b:eightBitDiv
+            r: eightBitDiv,
+            g: eightBitDiv,
+            b: eightBitDiv
         };
         this.pixelImage = {
             value: new Image(),
@@ -52,13 +52,13 @@ class RestrictColourDepth {
     getPercentOf = function (val: number, min: number = 0, max: number = 255) {
         return 1 - ((max - val) / (max - min));
     }
-    setColourRange(range:number){
+    setColourRange(range: number) {
         this.range = range;
         let cubeRoot = Math.cbrt(range);
         this.depth = {
-            r:cubeRoot,
-            g:cubeRoot,
-            b:cubeRoot
+            r: cubeRoot,
+            g: cubeRoot,
+            b: cubeRoot
         }
         rInput.value = `${this.depth.r}`;
         gInput.value = `${this.depth.g}`;
@@ -67,13 +67,13 @@ class RestrictColourDepth {
 
         this.process();
     }
-    setColourDepth(depth:{
-        r:number,
-        g:number,
-        b:number
-    }){
+    setColourDepth(depth: {
+        r: number,
+        g: number,
+        b: number
+    }) {
         this.depth = depth;
-        this.range = ((this.depth.r+this.depth.g+this.depth.b)/3)**3;
+        this.range = ((this.depth.r + this.depth.g + this.depth.b) / 3) ** 3;
         rInput.value = `${this.depth.r}`;
         gInput.value = `${this.depth.g}`;
         bInput.value = `${this.depth.b}`;
@@ -108,17 +108,17 @@ class RestrictColourDepth {
                 let g = imgdata.data[pos.g];
                 let b = imgdata.data[pos.b];
                 let a = imgdata.data[pos.a];
-                
+
                 let r_percent = this.getPercentOf(r, 0, 255);
                 let g_percent = this.getPercentOf(g, 0, 255);
                 let b_percent = this.getPercentOf(b, 0, 255);
                 let a_percent = this.getPercentOf(a, 0, 255);
 
                 const range = Math.cbrt(this.range);
-                const divamt = Math.floor(255/range);
-                imgdata.data[pos.r] = Math.floor(r_percent*this.depth.r)*divamt;
-                imgdata.data[pos.g] = Math.floor(g_percent*this.depth.g)*divamt;
-                imgdata.data[pos.b] = Math.floor(b_percent*this.depth.b)*divamt;
+                const divamt = Math.floor(255 / range);
+                imgdata.data[pos.r] = Math.floor(r_percent * this.depth.r) * divamt;
+                imgdata.data[pos.g] = Math.floor(g_percent * this.depth.g) * divamt;
+                imgdata.data[pos.b] = Math.floor(b_percent * this.depth.b) * divamt;
                 imgdata.data[pos.a] = a;
             }
         }
@@ -210,14 +210,14 @@ class RestrictColourDepth {
         }
     }
 }
-const clamp = function(min:number, max:number, value:number){
+const clamp = function (min: number, max: number, value: number) {
     return Math.max(Math.min(value, Math.max(min, max)), Math.min(min, max));
 }
-const handleRGBAInputs = function(){
+const handleRGBAInputs = function () {
     pixelImage.setColourDepth({
-        r:Math.max(parseInt(rInput.value), 1),
-        g:Math.max(parseInt(gInput.value), 1),
-        b:Math.max(parseInt(bInput.value), 1)
+        r: Math.max(parseInt(rInput.value), 1),
+        g: Math.max(parseInt(gInput.value), 1),
+        b: Math.max(parseInt(bInput.value), 1)
     });
 }
 const pixelImage = new RestrictColourDepth({
@@ -237,7 +237,7 @@ cDepth.addEventListener('change', () => {
 rInput.addEventListener('change', handleRGBAInputs);
 gInput.addEventListener('change', handleRGBAInputs);
 bInput.addEventListener('change', handleRGBAInputs);
-document.querySelector('#reset')!.addEventListener('click', function(){
+document.querySelector('#reset')!.addEventListener('click', function () {
     pixelImage.setColourRange(256);
 })
 pixelImage.image.onload = async () => {

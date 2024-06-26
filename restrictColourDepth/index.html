@@ -1,7 +1,6 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +10,11 @@
     <meta property="og:description" content="restricts any given image to a specific amount of colours" />
     <meta property="og:url" content="https://thesomething.uk/restrictColourDepth/" />
     <style>
-        *{
-            color:white;
-            margin-left:15px;
+        * {
+            color: white;
+            margin-left: 15px;
         }
+
         @font-face {
             font-family: 'jgs7';
             src: url('fonts/jgs7.woff2') format('woff2'),
@@ -23,38 +23,45 @@
             font-style: normal;
             font-display: swap;
         }
-        body,html{
-            margin:0;
-            padding:0;
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
             background-color: #24071b;
         }
-        body{
-            padding-top:15px;
-            padding-left:15px;
+
+        body {
+            padding-top: 15px;
+            padding-left: 15px;
         }
-        #output{
+
+        #output {
             /*font-family: 'jgs7';*/
-            margin:0px;
+            margin: 0px;
             background-color: #171421;
-            border:1px solid white;
-            border-radius:10px;
+            border: 1px solid white;
+            border-radius: 10px;
             border-top-left-radius: 0px;
-            padding:5px;
-            color:white;
-            text-align:center;
-            width:fit-content;
-            height:fit-content;
+            padding: 5px;
+            color: white;
+            text-align: center;
+            width: fit-content;
+            height: fit-content;
         }
-        input{
+
+        input {
             background-color: #171421;
-            color:white;
-            border:2px solid #881798;
+            color: white;
+            border: 2px solid #881798;
         }
-        img{
+
+        img {
             image-rendering: crisp-edges;
         }
     </style>
 </head>
+
 <body>
     <span id="inputs">
         <label for="fileInput">image to convert: </label><input type="file" name="fileInput"><br>
@@ -72,4 +79,5 @@
     <img id="output"></img>
     <script src="main.js"></script>
 </body>
+
 </html>

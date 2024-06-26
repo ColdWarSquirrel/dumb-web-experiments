@@ -1,25 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>darkness to alpha</title>
     <meta property="og:title" content="Darkness to Alpha" />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="converts the light value of each pixel of any given image to an opacity level">
+    <meta property="og:description"
+        content="converts the light value of each pixel of any given image to an opacity level">
     <meta property="og:url" content="https://thesomething.uk/darkness_to_alpha/" />
     <style>
-        *{
-            margin:0px;
+        * {
+            margin: 0px;
         }
-        canvas{
-            border:1px solid black;
+
+        canvas {
+            border: 1px solid black;
         }
-        body{
-            padding:20px;
+
+        body {
+            padding: 20px;
         }
     </style>
 </head>
+
 <body>
     <input type="file" onchange="readURL(this)"><br>
     <label for="invert">invert: </label><input type="checkbox" name="invert" checked="true"><br>
@@ -28,4 +33,5 @@
     <canvas></canvas>
     <script src="/darkness_to_alpha/index.js"></script>
 </body>
+
 </html>

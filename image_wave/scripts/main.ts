@@ -7,10 +7,10 @@ const frequencyInput = <HTMLInputElement>document.querySelector('#frequency')!;
 const slicewidthInput = <HTMLInputElement>document.querySelector('#slicewidth')!;
 const canvas = document.createElement('canvas');
 document.body.append(canvas);
-const ctx = canvas.getContext('2d', {willReadFrequently:true})!;
+const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
 
 let totalWidth = 0, totalHeight = 0;
-let slices:Array<ImageData> = [];
+let slices: Array<ImageData> = [];
 let useImage = new Image();
 
 const resize = async function (img: HTMLImageElement, new_width: unknown) {
@@ -31,34 +31,34 @@ const resize = async function (img: HTMLImageElement, new_width: unknown) {
     return returnImage;
 };
 
-const createSlices = async function(
-    img :        HTMLImageElement = useImage, 
-    sliceWidth : number           = 1, 
-    draw :       boolean          = true
-) : Promise<ImageData> {
+const createSlices = async function (
+    img: HTMLImageElement = useImage,
+    sliceWidth: number = 1,
+    draw: boolean = true
+): Promise<ImageData> {
     const tempCanvas = new OffscreenCanvas(img.width, img.height);
-    const tempCtx = tempCanvas.getContext('2d', {willReadFrequently:true})!;
-    if(sliceWidth > img.width){
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
+    if (sliceWidth > img.width) {
         tempCtx.drawImage(img, 0, 0);
-        return tempCtx.getImageData(0,0, img.width,img.height);
+        return tempCtx.getImageData(0, 0, img.width, img.height);
     }
-    let width = Math.floor(img.width/sliceWidth) * sliceWidth;
+    let width = Math.floor(img.width / sliceWidth) * sliceWidth;
     let height = setAdjustedHeight();
-    let sliceAmount = Math.floor(width/sliceWidth);
+    let sliceAmount = Math.floor(width / sliceWidth);
     let sliceHeight = img.height;
 
     tempCanvas.width = width;
 
     tempCtx.drawImage(img, 0, 0, width, sliceHeight);
-    const imgdata = tempCtx.getImageData(0,0, width,sliceHeight);
+    const imgdata = tempCtx.getImageData(0, 0, width, sliceHeight);
 
     slices = new Array();
 
-    for(let x = 0; x < sliceAmount; x++){
-        slices.push(tempCtx.getImageData(x*sliceWidth, 0, sliceWidth, sliceHeight));
+    for (let x = 0; x < sliceAmount; x++) {
+        slices.push(tempCtx.getImageData(x * sliceWidth, 0, sliceWidth, sliceHeight));
     }
 
-    tempCtx.clearRect(0,0,width,height);
+    tempCtx.clearRect(0, 0, width, height);
     tempCtx.putImageData(slices[0], 0, 0);
 
     canvas.width = width;
@@ -66,19 +66,19 @@ const createSlices = async function(
     if (draw) drawSlicesNormal();
     return imgdata;
 }
-const drawSlicesNormal = function(context:CanvasRenderingContext2D=ctx){
+const drawSlicesNormal = function (context: CanvasRenderingContext2D = ctx) {
     const tempCanvas = new OffscreenCanvas(slices[0].width, slices[0].height);
     let w = tempCanvas.width;
     let h = tempCanvas.height;
-    const tempCtx = tempCanvas.getContext('2d', {willReadFrequently:true})!;
-    context.canvas.width = w*slices.length;
-    slices.forEach((slice, index)=>{
-        tempCtx.clearRect(0,0,w,h);
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
+    context.canvas.width = w * slices.length;
+    slices.forEach((slice, index) => {
+        tempCtx.clearRect(0, 0, w, h);
         tempCtx.putImageData(slice, 0, 0);
-        context.drawImage(tempCanvas, index*w,0, w,h);
+        context.drawImage(tempCanvas, index * w, 0, w, h);
     });
 }
-const clamp = function(value:number, min:number, max:number){
+const clamp = function (value: number, min: number, max: number) {
     return Math.max(Math.min(value, max), min);
 }
 
@@ -89,52 +89,52 @@ let angle = 0;
 let amplitude = 20;
 let speed = 25;
 let frequency = 0.05;
-const setAdjustedHeight = function(img:HTMLImageElement=useImage){
-    canvas.height = useImage.height + (amplitude*2);
+const setAdjustedHeight = function (img: HTMLImageElement = useImage) {
+    canvas.height = useImage.height + (amplitude * 2);
     return canvas.height;
 }
-const loop = function(now : number){
-    delta = (now-lastTime)/1000;
+const loop = function (now: number) {
+    delta = (now - lastTime) / 1000;
     lastTime = now;
-    if(running){
+    if (running) {
         const tempCanvas = new OffscreenCanvas(slices[0].width, slices[0].height);
         let w = tempCanvas.width;
         let h = canvas.height;
         let imgw = useImage.width;
         let imgh = useImage.height;
-        const tempCtx = tempCanvas.getContext('2d', {willReadFrequently:true})!;
-        ctx.clearRect(0,0,w*slices.length,h);
+        const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
+        ctx.clearRect(0, 0, w * slices.length, h);
 
-        slices.forEach((slice, index)=>{
-            tempCtx.clearRect(0,0,w,h);
+        slices.forEach((slice, index) => {
+            tempCtx.clearRect(0, 0, w, h);
             tempCtx.putImageData(slice, 0, 0);
-            let s = Math.sin(angle+index*frequency);
-            let y = (amplitude+(s*amplitude));
-            ctx.drawImage(tempCanvas, index*w,y, w,imgh);
+            let s = Math.sin(angle + index * frequency);
+            let y = (amplitude + (s * amplitude));
+            ctx.drawImage(tempCanvas, index * w, y, w, imgh);
         });
         angle += speed * delta;
     }
     requestAnimationFrame(loop);
 }
-pauseButton.addEventListener('click', function(){
+pauseButton.addEventListener('click', function () {
     running = !running;
 })
-speedInput.addEventListener('change', function(){
+speedInput.addEventListener('change', function () {
     speed = clamp(parseFloat(speedInput.value), 1, 100);
 })
-amplitudeInput.addEventListener('change', function(){
+amplitudeInput.addEventListener('change', function () {
     amplitude = clamp(parseFloat(amplitudeInput.value), 0, 100);
     setAdjustedHeight();
 })
-frequencyInput.addEventListener('change', function(){
+frequencyInput.addEventListener('change', function () {
     console.log(parseFloat(frequencyInput.value))
     frequency = clamp(parseFloat(frequencyInput.value), 0, 1);
 })
-slicewidthInput.addEventListener('change', function(){
+slicewidthInput.addEventListener('change', function () {
     createSlices(useImage, clamp(parseFloat(slicewidthInput.value), 1, 50));
 })
 
-const handlePaste = async function(event: ClipboardEvent) {
+const handlePaste = async function (event: ClipboardEvent) {
     var items = event.clipboardData?.items;
     if (!items) return;
     var item = items[0];
@@ -145,11 +145,11 @@ const handlePaste = async function(event: ClipboardEvent) {
             let tempimage = new Image();
             tempimage.onload = async () => {
                 //errorMsg.style.display = 'none';
-                if(tempimage.width > 500){
+                if (tempimage.width > 500) {
                     useImage = await resize(tempimage, 500);
                     await createSlices();
                     return true;
-                }else{
+                } else {
                     useImage = tempimage;
                     await createSlices();
                     return true;
@@ -164,7 +164,7 @@ const handlePaste = async function(event: ClipboardEvent) {
         return false;
     }
 }
-const handleFile = function() {
+const handleFile = function () {
     const input = fileInput;
     if (input.files && input.files[0]) {
         console.log(input.files[0]);
@@ -175,9 +175,9 @@ const handleFile = function() {
             reader.onload = (e) => {
                 let tempimage = new Image();
                 tempimage.onload = async () => {
-                    if(tempimage.width > 500){
+                    if (tempimage.width > 500) {
                         useImage = await resize(tempimage, 500);
-                    }else{
+                    } else {
                         useImage = tempimage;
                     }
                     await createSlices();
@@ -198,11 +198,11 @@ document.addEventListener("paste", handlePaste);
 fileInput.addEventListener("change", handleFile);
 
 const sampleImage = new Image();
-sampleImage.onload = function(){
+sampleImage.onload = function () {
     useImage = sampleImage;
     totalWidth = sampleImage.width;
     totalHeight = setAdjustedHeight();
-    createSlices(sampleImage).then(()=>{
+    createSlices(sampleImage).then(() => {
         requestAnimationFrame(loop);
     });
 };

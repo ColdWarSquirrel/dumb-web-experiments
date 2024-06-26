@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Anchor Point Generator</title>
     <style>
-        *{
-            font-size:1rem;
-            margin:0px;
+        * {
+            font-size: 1rem;
+            margin: 0px;
         }
-        body{
+
+        body {
             background-color: #171a21;
-            color:#c7d5e0;
-            padding:calc( ( 1vw + 1vh) / 2 );
+            color: #c7d5e0;
+            padding: calc((1vw + 1vh) / 2);
         }
-        .noselect{
-            user-select:none;
+
+        .noselect {
+            user-select: none;
         }
-        br{
+
+        br {
             user-select: none;
         }
     </style>
 </head>
+
 <body>
     <input type="file" id="fileinput" class="noselect"><br>
     <span id="errorMsg" style="display:none;">this file is not supported! try again!!! again!!!!!</span><br>
@@ -37,48 +42,48 @@
         const resetButton = document.querySelector('#resetbutton');
         const coords = document.querySelector('#output');
         let sampleImage = new Image();
-        sampleImage.onload = ()=>{
+        sampleImage.onload = () => {
             anchorpoint.image = sampleImage;
             setDimensions();
             update(anchorpoint.centreX, anchorpoint.centreY);
         }
         sampleImage.src = "./curiositycore.png";
         let anchorpoint = {
-            image:new Image(),
-            x:0,
-            y:0,
-            vecx:0,
-            vecy:0,
-            size:5,
-            centreX:0,
-            centreY:0
+            image: new Image(),
+            x: 0,
+            y: 0,
+            vecx: 0,
+            vecy: 0,
+            size: 5,
+            centreX: 0,
+            centreY: 0
         };
         let isMouseDown = false;
-        const setDimensions = ()=>{
+        const setDimensions = () => {
             canvas.width = anchorpoint.image.width;
             canvas.height = anchorpoint.image.height;
-            anchorpoint.centreX = anchorpoint.image.width/2;
-            anchorpoint.centreY = anchorpoint.image.height/2;
+            anchorpoint.centreX = anchorpoint.image.width / 2;
+            anchorpoint.centreY = anchorpoint.image.height / 2;
         }
-        const drawImageToCanvas = ()=>{
+        const drawImageToCanvas = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(anchorpoint.image, 0, 0);
-            drawAnchorPoint(0, 0, anchorpoint.size*0.75);
+            drawAnchorPoint(0, 0, anchorpoint.size * 0.75);
         }
-        const drawAnchorPoint = (x = anchorpoint.x, y = anchorpoint.y, size = anchorpoint.size)=>{
+        const drawAnchorPoint = (x = anchorpoint.x, y = anchorpoint.y, size = anchorpoint.size) => {
             x += anchorpoint.centreX;
             y += anchorpoint.centreY;
             ctx.save();
             ctx.strokeStyle = "white";
             ctx.beginPath();
-            ctx.moveTo(x-size, y-size);
-            ctx.lineTo(x+size, y+size);
-            ctx.moveTo(x+size, y-size);
-            ctx.lineTo(x-size, y+size);
+            ctx.moveTo(x - size, y - size);
+            ctx.lineTo(x + size, y + size);
+            ctx.moveTo(x + size, y - size);
+            ctx.lineTo(x - size, y + size);
             ctx.stroke();
 
             ctx.strokeStyle = "black";
-            ctx.strokeRect(x-size, y-size, size*2, size*2);
+            ctx.strokeRect(x - size, y - size, size * 2, size * 2);
             ctx.restore();
         }
         const handlePaste = (event) => {
@@ -103,8 +108,8 @@
                 errorMsg.style.display = 'block';
                 let size = 0;
                 console.log(item);
-                if(item){
-                    if(item.getAsFile){
+                if (item) {
+                    if (item.getAsFile) {
                         size = item.getAsFile().size;
                     }
                 }
@@ -135,30 +140,30 @@
                 }
             }
         }
-        const setAnchorPoint = (x,y)=>{
+        const setAnchorPoint = (x, y) => {
             anchorpoint.x = x - anchorpoint.centreX;
             anchorpoint.y = y - anchorpoint.centreY;
             anchorpoint.vecx = (x / anchorpoint.image.width) - 0.5;
             anchorpoint.vecy = (y / anchorpoint.image.height) - 0.5;
             coords.innerText = `${anchorpoint.x}, ${anchorpoint.y},\n${anchorpoint.vecx}, ${anchorpoint.vecy}`;
         }
-        const update = (x,y) => {
-            setAnchorPoint(x,y);
+        const update = (x, y) => {
+            setAnchorPoint(x, y);
             drawImageToCanvas();
             drawAnchorPoint();
         }
         const handleMouseDown = (e) => {
             isMouseDown = true;
-            update(e.clientX-canvas.offsetLeft, e.clientY-canvas.offsetTop);
+            update(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
         }
-        const handleMouseUp = ()=>{ isMouseDown = false; }
+        const handleMouseUp = () => { isMouseDown = false; }
         const handleMouseMove = (e) => {
-            if(isMouseDown){
+            if (isMouseDown) {
                 handleMouseDown(e);
             }
         }
-        const reset = ()=>{
-            update(anchorpoint.centreX,anchorpoint.centreY);
+        const reset = () => {
+            update(anchorpoint.centreX, anchorpoint.centreY);
         }
         document.querySelector('input[type=file]').addEventListener("change", handleFile);
         document.querySelector('input[type=button]').addEventListener("click", reset);
@@ -168,4 +173,5 @@
         document.addEventListener("paste", handlePaste);
     </script>
 </body>
+
 </html>
