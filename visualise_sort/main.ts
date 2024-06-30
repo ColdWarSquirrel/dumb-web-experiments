@@ -33,6 +33,8 @@ class Input<T extends HTMLElement> {
   }
 }
 
+type PossibleAlgorithm = "bubble" | "insert";
+
 const CANVAS_WIDTH = Math.min(window.innerWidth, 600);
 const CANVAS_HEIGHT = 300;
 
@@ -40,8 +42,8 @@ const DEFAULT_FPS = 30;
 const MAX_FPS = 120;
 const MIN_FPS = 0.1;
 
-const DEFAULT_ALGORITHM = "bubble";
-const POSSIBLE_ALGORITHMS = ["bubble", "insert"]
+const DEFAULT_ALGORITHM: PossibleAlgorithm = "bubble";
+const POSSIBLE_ALGORITHMS: Array<PossibleAlgorithm> = ["bubble", "insert"];
 
 const DEFAULT_BAR_COUNT = 100;
 const MIN_BAR_COUNT = 3;
@@ -54,7 +56,7 @@ let fps = DEFAULT_FPS;
 let lowToHigh = true;
 let stickToBottom = true;
 let pong = false;
-let algorithm: "bubble" | "insert" | string = DEFAULT_ALGORITHM;
+let algorithm: PossibleAlgorithm = DEFAULT_ALGORITHM;
 let useSteps = false;
 
 
@@ -122,11 +124,10 @@ const reset = () => {
   finished = false;
 };
 
-const switchAlgorithm = (algo: string) => {
+const switchAlgorithm = (algo: PossibleAlgorithm) => {
   if (POSSIBLE_ALGORITHMS.includes(algo)) {
     algorithm = algo;
     reset();
-    if (algo == "step") stepIndex = 1;
     return true;
   };
   return false;
@@ -258,7 +259,7 @@ const algorithmInput = new Input<HTMLSelectElement>(
   document.querySelector('#algorithm')!,
   'change',
   (element) => {
-    switchAlgorithm(element.options[element.selectedIndex].value);
+    switchAlgorithm(<PossibleAlgorithm>element.options[element.selectedIndex].value);
   }
 );
 const amountInput = new Input<HTMLInputElement>(
