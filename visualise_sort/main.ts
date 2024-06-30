@@ -1,6 +1,7 @@
 "use strict";
 
 /*  canvas initialisation stuff  */
+
 const canvas = document.createElement('canvas');
 document.body.append(canvas);
 const ctx = canvas.getContext('2d')!;
@@ -8,6 +9,19 @@ const ctx = canvas.getContext('2d')!;
 
 /*  defaults / mins and maxes  */
 
+type int = number;
+
+class LoadEvent<T extends () => void> {
+  public event: T;
+  constructor(event: T) {
+    this.event = event;
+    let temp = window.onload ?? new Function();
+    window.onload = () => {
+      temp();
+      this.event();
+    }
+  }
+}
 
 class Input<T extends HTMLElement> {
   public element: T;
@@ -118,11 +132,7 @@ const switchAlgorithm = (algo: string) => {
   return false;
 };
 
-abstract class Sort {
-  abstract use(): 0 | 1;
-}
-
-const bubbleSort = function (index: number) {
+const bubbleSort = function (index: number): number {
   if (bars[index + 1] !== undefined && bars[index] > bars[index + 1]) {
     swapBars(index, index + 1);
     return 1;
@@ -130,7 +140,7 @@ const bubbleSort = function (index: number) {
   return 0;
 };
 
-const insertSort = function (index: number) {
+const insertSort = function (index: number): number {
   if (bars[index - 1] !== undefined && bars[index] < bars[index - 1]) {
     swapBars(index, index - 1);
     return 1;
@@ -276,8 +286,7 @@ const useStepsInput = new Input<HTMLInputElement>(
     useSteps = element.checked;
   }
 );
-
-window.onload = () => {
+const init = new LoadEvent(() => {
   canvas.width = CANVAS_WIDTH;
   canvas.height = CANVAS_HEIGHT;
 
@@ -302,6 +311,6 @@ window.onload = () => {
   createBars(DEFAULT_BAR_COUNT);
   drawBars();
   requestAnimationFrame(loop);
-};
+});
 
 canvas.onclick = e => reset();
